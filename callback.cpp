@@ -17,6 +17,8 @@ u_int32_t filter(struct nfq_data *tb, const std::set<std::string> &blacklist)
     // TCPHeader
     int tcp_offset = iphdr->ip_hl * 4;
     TCPHeader *tcphdr = reinterpret_cast<TCPHeader *>(data + tcp_offset);
+    if (ntohs(tcphdr->th_dport) != 80)
+        return NF_ACCEPT;
 
     // HTTPHeader?
     int http_offset = tcp_offset + tcphdr->th_off * 4;
@@ -36,7 +38,6 @@ u_int32_t filter(struct nfq_data *tb, const std::set<std::string> &blacklist)
             printf("Blacklist Found: %s\n", hostname.c_str());
             return NF_DROP;
         }
-        printf("Blacklist Not Found: %s\n", hostname.c_str());
     }
     return NF_ACCEPT;
 }

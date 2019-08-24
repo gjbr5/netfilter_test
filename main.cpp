@@ -31,8 +31,8 @@ int main(int argc, char **argv)
         return 0;
     }
     //    iptables
-    system("sudo iptables -A INPUT -j NFQUEUE");
-    system("sudo iptables -A OUTPUT -j NFQUEUE");
+    //    system("sudo iptables -A INPUT -j NFQUEUE");
+    //    system("sudo iptables -A OUTPUT -j NFQUEUE");
 
     for (int i = 1; i < argc; i++)
         blacklist.insert(argv[i]);
@@ -78,7 +78,6 @@ int main(int argc, char **argv)
     for (;;) {
         int rv = static_cast<int>(recv(fd, buf, sizeof(buf), 0));
         if (rv >= 0) {
-            //printf("pkt received\n");
             nfq_handle_packet(h, buf, rv);
         }
         /* if your application is too slow to digest the packets that
